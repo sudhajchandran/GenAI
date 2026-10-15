@@ -40,7 +40,7 @@ Six fictional profiles and twenty curated Jira-style tasks. All data is syntheti
 
 Include this source in your GitHub repository. Capture screenshots of My journey, marketplace, submission and review. Describe prompts, iterations and learning in your project document, and record the walkthrough in under five minutes. Source repository: https://github.com/sudhajchandran/GenAI
 
-Private working demo: https://engineering-launchpad-bootcamp.tealhawk1.chatgpt.site (requires owner sign-in).
+Public working demo: https://engineering-launchpad-bootcamp.tealhawk1.chatgpt.site (no sign-in required).
 
 ## Files
 
