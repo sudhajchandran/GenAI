@@ -1,0 +1,17 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const element=()=>({innerHTML:'',textContent:'',style:{},value:'',checked:false});const els={};let stored=null;
+const ctx={document:{querySelector:s=>els[s]??=(element()),querySelectorAll:()=>[]},location:{hash:''},window:{},localStorage:{getItem:()=>stored,setItem:(k,v)=>stored=v},setTimeout:()=>{},confirm:()=>true,console};vm.createContext(ctx);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),ctx);
+const run=s=>vm.runInContext(s,ctx);
+assert.equal(run('tasks.length'),20);assert.equal(run('hires.length'),6);
+assert.equal(run('progress().points'),100);assert.equal(run('progress().graduated'),false);
+run("state.entries.push({task:'ENG-101',hire:'maya',status:'review'})");assert.equal(run('progress().points'),100);
+run("state.entries.at(-1).status='approved'");assert.equal(run('progress().points'),200);assert.equal(run('progress().graduated'),false);
+run("state.entries.push({task:'ENG-119',hire:'maya',status:'approved'})");assert.equal(run('progress().graduated'),true);
+run("state=seed();state.entries.push({task:'ENG-107',hire:'maya',status:'approved'})");assert.equal(run('progress().graduated'),false);
+run("state.entries.push({task:'ENG-111',hire:'maya',status:'approved'})");assert.equal(run('progress().graduated'),true);
+run("state=seed();state.entries.push({task:'ENG-113',hire:'maya',status:'approved'})");assert.equal(run('progress().graduated'),true);
+run("state=seed();state.entries.push({task:'ENG-101',hire:'maya',status:'approved',partner:'noor'})");assert.equal(run("progress('noor').points"),0);
+assert.ok(run("score(task('ENG-101')).n>score(task('ENG-102')).n"));
+assert.equal(run("esc('<script>')"),'&lt;script&gt;');
+run('save()');assert.ok(stored.includes('maya'));
+console.log('Passed: data, matching, approval gating, all graduation paths, mixed paths, individual pair credit, escaping, persistence.');
